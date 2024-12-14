@@ -1,45 +1,35 @@
 package com.example.catsgram.controller;
 
-import com.example.catsgram.exceptions.InvalidEmailException;
-import com.example.catsgram.exceptions.UserAlreadyExistsException;
 import com.example.catsgram.model.User;
+import com.example.catsgram.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
-import java.util.Map;
-import java.util.HashMap;
 
 @RestController
 @RequestMapping("/users")
+@RequiredArgsConstructor
 public class UserController {
-    private final Map<String, User> users = new HashMap<>();
+    private final UserService userService;
 
     @GetMapping
     public Collection<User> findAll() {
-        return users.values();
+        return userService.findAll();
     }
 
     @PostMapping
     public User create(@RequestBody User user) {
-        if (user.getEmail() == null) {
-            throw new InvalidEmailException();
-        }
-
-        if (users.containsKey(user.getEmail())) {
-            throw new UserAlreadyExistsException();
-        }
-
-        users.put(user.getEmail(), user);
-        return user;
+        return userService.create(user);
     }
 
     @PutMapping
     public User put(@RequestBody User user) {
-        if (user.getEmail() == null) {
-            throw new InvalidEmailException();
-        }
+        return userService.put(user);
+    }
 
-        users.put(user.getEmail(), user);
-        return user;
+    @GetMapping("/{userEmail}")
+    public User findByEmail(@PathVariable String userEmail) {
+        return userService.findUserByEmail(userEmail);
     }
 }
