@@ -5,6 +5,7 @@ import com.example.catsgram.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.Collection;
 
 @RestController
@@ -14,8 +15,12 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public Collection<User> findAll() {
-        return userService.findAll();
+    public Collection<User> findAll(@RequestParam(required = false) LocalDate birthdate) {
+        if (birthdate == null) {
+            return userService.findAll();
+        }
+
+        return userService.findUsersByBirthdate(birthdate);
     }
 
     @PostMapping

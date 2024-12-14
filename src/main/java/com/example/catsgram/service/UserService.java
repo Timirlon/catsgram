@@ -5,6 +5,7 @@ import com.example.catsgram.exceptions.UserAlreadyExistsException;
 import com.example.catsgram.model.User;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -17,6 +18,13 @@ public class UserService {
 
     public User findUserByEmail(String email) {
         return users.get(email);
+    }
+
+    public List<User> findUsersByBirthdate(LocalDate birthdate) {
+        return users.values()
+                .stream()
+                .filter(user -> user.getBirthdate().equals(birthdate))
+                .toList();
     }
 
     public User create(User user) {
