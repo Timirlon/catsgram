@@ -4,11 +4,8 @@ import com.example.catsgram.model.Post;
 import com.example.catsgram.service.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -19,8 +16,11 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping
-    public List<Post> findAll() {
-        List<Post> posts = postService.findAll();
+    public List<Post> findAll(@RequestParam(required = false, defaultValue = "desc") String sort,
+                              @RequestParam(required = false, defaultValue = "10") int size,
+                              @RequestParam(required = false, defaultValue = "0") int page) {
+
+        List<Post> posts = postService.findAll(sort, size, page);
 
         log.debug("Текущее количество постов:{} ", posts.size());
 
