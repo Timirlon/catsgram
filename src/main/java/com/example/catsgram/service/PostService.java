@@ -17,33 +17,17 @@ public class PostService {
     private int idCounter = 1;
 
     public List<Post> findAll(String sort, int size, int page) {
-        if (posts.isEmpty()) {
-            return posts;
-        }
+        List<Post> sortedPosts = new ArrayList<>(posts);
 
         if (sort.equals("desc")) {
-            posts.sort(new PostComparator());
+            sortedPosts.sort(new PostComparator());
         } else if (sort.equals("asc")) {
-            posts.sort(new PostComparator().reversed());
+            sortedPosts.sort(new PostComparator().reversed());
         }
 
-        List<List<Post>> newPosts = new ArrayList<>();
+        int from = size * page;
 
-        for (int i = 0; i < posts.size(); i += size) {
-            List<Post> temp = new ArrayList<>();
-
-            for (int j = 0; j < size; j++) {
-                try {
-                    temp.add(posts.get(j + i));
-                } catch (IndexOutOfBoundsException e) {
-                    break;
-                }
-            }
-
-            newPosts.add(temp);
-        }
-
-        return newPosts.get(page);
+        return sortedPosts.subList(from, Math.min(posts.size(), size));
     }
 
     public Post create(Post post) {
