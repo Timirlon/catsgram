@@ -1,5 +1,6 @@
 package com.example.catsgram.controller;
 
+import com.example.catsgram.exceptions.IncorrectParameterException;
 import com.example.catsgram.model.Post;
 import com.example.catsgram.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,18 @@ public class PostController {
     public List<Post> findAll(@RequestParam(required = false, defaultValue = "desc") String sort,
                               @RequestParam(required = false, defaultValue = "10") int size,
                               @RequestParam(required = false, defaultValue = "0") int page) {
+
+        if (!sort.equals("asc") && !sort.equals("desc")) {
+            throw new IncorrectParameterException("sort");
+        }
+
+        if (size < 0) {
+            throw new IncorrectParameterException("size");
+        }
+
+        if (page < 0) {
+            throw new IncorrectParameterException("page");
+        }
 
         List<Post> posts = postService.findAll(sort, size, page);
 
